@@ -1,4 +1,3 @@
-import React from "react";
 import { ELEM_HEADING, TEXT_BOLD } from "../common-themes";
 
 export function WebAppHeading() {
