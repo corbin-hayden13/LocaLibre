@@ -33,7 +33,7 @@ class Game:
         self.description: str = description
         self.game_tags: Tags = game_tags
         self.users: list[str] = users
-        game_analytics: Analytics = game_analytics
+        self.game_analytics: Analytics = game_analytics
 
 
 @app.post("/api/add-user")
