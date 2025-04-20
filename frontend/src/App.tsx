@@ -1,6 +1,7 @@
 import { MainContentContainer } from './components/MainContentContainer';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { WebAppHeading } from './components/WebAppHeading';
+import { WebAppSubheading } from './components/WebAppSubheading';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       }}
     >
       <WebAppHeading />
+      <WebAppSubheading />
       <div
         style={{
           display: "flex",

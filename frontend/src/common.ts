@@ -25,9 +25,4 @@ export const TEST_GAMES: GameData[] = [
         displayName: "Some game with a really long display name to test how the sidebar renders this game name",
         dateAdded: new Date("2025-04-15"),
     },
-    {
-        gameUID: "0004",
-        displayName: "",
-        dateAdded: new Date("2025-04-15"),
-    },
 ];

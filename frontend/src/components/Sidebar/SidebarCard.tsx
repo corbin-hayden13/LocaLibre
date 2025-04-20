@@ -14,21 +14,20 @@ export function SidebarCard({ cardTitle, listGameData }: PropsWrapper) {
                 flexDirection: "column",
                 background: ELEM_BACKGROUND,
                 borderRadius: 10,
-                margin: 10,
                 maxWidth: "100%", // Stop text from expanding the card too far
             }}
         >
             <div
                 style={{
-                    alignItems: "center",
-                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
                     borderRadius: 10,
-                    paddingTop: 10,
-                    paddingBottom: 10,
+                    padding: 10,
                     background: ELEM_HEADING
                 }}
             >
-                <text style={{ color: TEXT_BOLD, fontWeight: "bold" }} >{cardTitle}</text>
+                <text style={{ color: TEXT_BOLD, fontWeight: "bold", textAlign: "center" }} >{cardTitle}</text>
             </div>
             <div
                 style={{
@@ -42,10 +41,12 @@ export function SidebarCard({ cardTitle, listGameData }: PropsWrapper) {
                     <text
                         key={`game-label-${index}`}
                         style={{
+                            paddingBottom: 3,
                             color: TEXT_BASE,
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
+                            borderBottom: index === listGameData.length - 1 ? "none" : `1px solid ${ELEM_HEADING}`,
                         }}
                     >
                         {gameData.displayName}
