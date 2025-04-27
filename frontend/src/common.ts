@@ -1,12 +1,21 @@
+import { Dispatch, SetStateAction } from "react";
+
+export type SetState<T> = Dispatch<SetStateAction<T>>;
+
+export interface XYPos {
+    x: number;
+    y: number;
+}
+
 export interface GameData {
-    gameUID: string,         // Internal unique game identifier
-    displayName: string,     // The name of the game
-    dateAdded: Date,         // Date uploaded to the tool
-    genre?: string,          // Main genre of the game, subgenres should be in tags
-    description?: string,    // Game description
-    developer?: string,      // Name of developer of the game
-    tags?: string[],         // NSFW, SFW, 3D, 2D, and other game identifiers (see itch.io for game tag examples)
-    collections?: string[],  // Favorites, custom collections
+    gameUID: string;         // Internal unique game identifier
+    displayName: string;     // The name of the game
+    dateAdded: Date;         // Date uploaded to the tool
+    genre?: string;          // Main genre of the game, subgenres should be in tags
+    description?: string;    // Game description
+    developer?: string;      // Name of developer of the game
+    tags?: string[];         // NSFW, SFW, 3D, 2D, and other game identifiers (see itch.io for game tag examples)
+    collections?: string[];  // Favorites, custom collections
 }
 
 export const TEST_GAMES: GameData[] = [
