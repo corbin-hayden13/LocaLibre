@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { XYPos, GameData, } from "../common";
-import { TEXT_BASE, ELEM_HEADING } from "../common-themes";
+import { TEXT_BASE, ELEM_HEADING, WEB_APP_BACKGROUND } from "../common-themes";
 
 type CallbackFunc = (option: string) => void;
 
@@ -51,8 +51,10 @@ export default function GameQuickOptionsMenu({isVisible, position, onClose, onSe
                 left: position.x,
                 background: ELEM_HEADING,
                 borderRadius: 6,
+                border: `1px solid ${WEB_APP_BACKGROUND}`,
                 boxShadow: '0 2px 10px rgba(0,0,0,0.6)',
                 zIndex: 1000,
+                padding: 3,
             }}
         >
             {MENU_OPTIONS.map((option, index) => (
