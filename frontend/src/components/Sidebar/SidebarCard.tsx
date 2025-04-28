@@ -18,6 +18,7 @@ const handleGameLabelClick = (event: React.MouseEvent<HTMLDivElement>, gameData:
             break;
         case 2:  // Right click
             props.setCursorPosition({ x: event.clientX, y: event.clientY });
+            props.setQuickOptionsVisible(true);
             console.log(`Right click event on ${gameData.displayName}`);
             break;
         

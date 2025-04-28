@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Popover, Menu } from "evergreen-ui";
-import { XYPos, GameData, SetState } from "../common";
-import { TEXT_BASE } from "../common-themes";
+import { XYPos, GameData, } from "../common";
+import { TEXT_BASE, ELEM_HEADING } from "../common-themes";
 
 type CallbackFunc = (option: string) => void;
 
@@ -43,45 +42,36 @@ export default function GameQuickOptionsMenu({isVisible, position, onClose, onSe
     }, [isVisible, onClose]);
 
     if (!isVisible) return null;
-
-    return gameData ? (
+    return !gameData ? null : (
         <div
+            ref={menuRef}
             style={{
-                cursor: 'pointer',
-                userSelect: 'none',
+                position: "absolute",
+                top: position.y,
+                left: position.x,
+                background: ELEM_HEADING,
+                borderRadius: 6,
+                boxShadow: '0 2px 10px rgba(0,0,0,0.6)',
+                zIndex: 1000,
             }}
         >
-            <div
-                style={{
-                    color: TEXT_BASE,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                }}
-            >
-                {gameData.displayName}
-            </div>
-            <div
-                ref={menuRef}
-                style={{
-
-                }}
-            >
-                {MENU_OPTIONS.map((option, index) => (
-                    <div
-                        key={`menu-option-${index + 1}`}
-                        onClick={() => {
-                            handleSelectOption(option, gameData, onSelectCallback);
-                            onClose();
-                        }}
-                        style={{
-                            color: TEXT_BASE,
-                        }}
-                    >
-                        {option}
-                    </div>
-                ))}
-            </div>
+            {MENU_OPTIONS.map((option, index) => (
+                <div
+                    key={`menu-option-${index + 1}`}
+                    onClick={() => {
+                        handleSelectOption(option, gameData, onSelectCallback);
+                        onClose();
+                    }}
+                    style={{
+                        color: TEXT_BASE,
+                        padding: "8px 12px",
+                        cursor: "pointer",
+                        borderBottom: index === MENU_OPTIONS.length - 1 ? "none" : `1px solid ${TEXT_BASE}`,
+                    }}
+                >
+                    {option}
+                </div>
+            ))}
         </div>
-    ) : (<>{console.log("gameData is undefined for GameQuickOptionsMenu")}</>);
+    );
 }
