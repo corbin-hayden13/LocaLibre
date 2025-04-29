@@ -10,7 +10,7 @@ export function WebAppSubheading() {
     const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
-        // Search logic here
+        // TODO - Search logic here
     };
 
     return (
@@ -29,6 +29,8 @@ export function WebAppSubheading() {
                 maxHeight: "70px",
                 maxWidth: "100%",
                 boxSizing: "border-box",
+                boxShadow: '0 5px 10px -2px rgba(0, 0, 0, 0.9)', // bottom-only shadow
+                zIndex: 1,  // Subheading shadow renders over SidebarCards
                 flex: "1 1 auto",
             }}
         >

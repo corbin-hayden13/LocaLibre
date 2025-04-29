@@ -1,5 +1,5 @@
-import { Button, Dialog, TextInputField } from "evergreen-ui";
-import { ChangeEvent, useState } from "react";
+import { Button, ChevronDownIcon, ChevronRightIcon, Dialog, FormFieldLabel, Label, TagInput, TextInputField } from "evergreen-ui";
+import { ChangeEvent, useState, useEffect } from "react";
 import { GameData, GameDataProp, SetState } from "../common";
 import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../common-themes";
 
@@ -9,6 +9,11 @@ const COVER_IMAGE: GameDataProp = "coverImagePath";
 const GENRE: GameDataProp = "genre";
 const DEVELOPER: GameDataProp = "developer";
 const DESCRIPTION: GameDataProp = "description";
+// const TAGS: GameDataProp = "tags";
+// const COLLECTIONS: GameDataProp = "collections";
+const VERSION: GameDataProp = "version";
+const RELEASE_DATE: GameDataProp = "releaseDate";
+
 const EMPTY_GAME_DATA: GameData = {
     gameUID: "",
     displayName: "",
@@ -23,6 +28,8 @@ const EMPTY_GAME_DATA: GameData = {
     tags: [],
     collections: [],
 };
+const AUTOCOMPLETE_TAGS: string[] = ["NSFW", "SFW", "FPS", "Unity WebGL", "Godot", "Jam Game", "2D", "3D"];
+const AUTOCOMPLETE_COLLECTIONS: string[] = ["Favorites", "All Games", "Hidden"];
 
 const handleInputChange = (gameDataProp: GameDataProp, value: string, setCurrGameData: SetState<GameData>) => {
     setCurrGameData((prevData) => ({ ...prevData, [gameDataProp]: value }));
@@ -35,19 +42,32 @@ interface PropsWrapper {
 }
 
 export default function AddGameModal({isShown, onClose}: PropsWrapper) {
+    const [showOptionalInputs, setShowOptionalInputs] = useState<boolean>(false);
+
     const [currGameData, setCurrGameData] = useState<GameData>(EMPTY_GAME_DATA);
+    const [tags, setTags] = useState<string[]>(EMPTY_GAME_DATA.tags || []);
+    const [collections, setCollections] = useState<string[]>(EMPTY_GAME_DATA.collections || []);
+
+    useEffect(() => {
+        setCurrGameData((prevData) => ({...prevData, tags }));
+    }, [tags]);
+    useEffect(() => {
+        setCurrGameData((prevData) => ({...prevData, collections }));
+    }, [collections]);
+
+    const handleOnCloseComplete = () => {
+        if (onClose) onClose();
+        setCurrGameData(EMPTY_GAME_DATA);
+    };
 
     return (
         <Dialog
             isShown={isShown}
             title={<span style={{ color: TEXT_BOLD, fontWeight: "bold" }} >Add A New Game</span>}
             confirmLabel="Add Game"
-            onCloseComplete={() => {
-                if (onClose) onClose();
-                setCurrGameData(EMPTY_GAME_DATA);
-            }}
+            onCloseComplete={handleOnCloseComplete}
             containerProps={{
-                style: { background: ELEM_BACKGROUND, color: TEXT_BASE, border:`2px solid ${TEXT_BOLD}` }
+                style: { background: ELEM_BACKGROUND, color: TEXT_BASE, border:`2px solid ${TEXT_BOLD}` },
             }}
             contentContainerProps={{
                 style: { color: TEXT_BASE }
@@ -84,35 +104,115 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DISPLAY_NAME, e.target.value, setCurrGameData)}
             />
             <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Description</span>}
-                value={currGameData[DESCRIPTION]}
-                placeholder="Enter game description"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DESCRIPTION, e.target.value, setCurrGameData)}
-            />
-            <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Game Path</span>}
+                label={<span style={{ color: TEXT_BASE }} >Game Path *</span>}
                 value={currGameData[GAME_PATH]}
                 placeholder="Enter game path"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(GAME_PATH, e.target.value, setCurrGameData)}
             />
             <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Cover Image Path</span>}
-                value={currGameData[COVER_IMAGE]}
-                placeholder="Enter cover image path"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(COVER_IMAGE, e.target.value, setCurrGameData)}
+                label={<span style={{ color: TEXT_BASE }} >Description</span>}
+                value={currGameData[DESCRIPTION]}
+                placeholder="Enter game description"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DESCRIPTION, e.target.value, setCurrGameData)}
             />
-            <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Genre</span>}
-                value={currGameData[GENRE]}
-                placeholder="Enter genre"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(GENRE, e.target.value, setCurrGameData)}
-            />
-            <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Developer</span>}
-                value={currGameData[DEVELOPER]}
-                placeholder="Enter developer name"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DEVELOPER, e.target.value, setCurrGameData)}
-            />
+            {/* Collapsable Input Section For Optional Inputs */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    background: ELEM_HEADING,
+                    border: `1px solid ${TEXT_BOLD}`,
+                    borderRadius: 4,
+                    padding: 10,
+                }}
+            >
+                {/* Header */}
+                <div
+                    onClick={() => setShowOptionalInputs(prev => !prev)}
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        cursor: "pointer",
+                        userSelect: "none",
+                    }}
+                >
+                    <span style={{ color: TEXT_BOLD, fontWeight: "bold" }} >Advanced Options</span>
+                    <ChevronDownIcon
+                        style={{
+                            transform: showOptionalInputs ? "rotate(180deg)" : "rotate(0deg)",
+                            transistion: "transform 0.3s ease",
+                        }}
+                    />
+                </div>
+                {/* Input Content */}
+                {showOptionalInputs &&
+                    <div
+                        style={{ padding: 10, }}
+                    >
+                        <TextInputField
+                            label={<span style={{ color: TEXT_BASE }} >Cover Image Path</span>}
+                            value={currGameData[COVER_IMAGE]}
+                            placeholder="Enter cover image path"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(COVER_IMAGE, e.target.value, setCurrGameData)}
+                        />
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <TextInputField
+                                label={<span style={{ color: TEXT_BASE }} >Genre</span>}
+                                value={currGameData[GENRE]}
+                                placeholder="Enter genre"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(GENRE, e.target.value, setCurrGameData)}
+                            />
+                            <TextInputField
+                                label={<span style={{ color: TEXT_BASE }} >Version</span>}
+                                value={currGameData[VERSION]}
+                                placeholder="Enter game version"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(VERSION, e.target.value, setCurrGameData)}
+                            />
+                        </div>
+                        <TextInputField
+                            label={<span style={{ color: TEXT_BASE }} >Developer</span>}
+                            value={currGameData[DEVELOPER]}
+                            placeholder="Enter developer name"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DEVELOPER, e.target.value, setCurrGameData)}
+                        />
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                marginBottom: 20,
+                                gap: 10,
+                            }}
+                        >
+                            <FormFieldLabel><span style={{ color: TEXT_BASE }} >Enter Tags</span></FormFieldLabel>
+                            <TagInput
+                                values={currGameData.tags}
+                                autocompleteItems={AUTOCOMPLETE_TAGS}
+                                onChange={(values: string[]) => setTags(values)}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 10,
+                            }}
+                        >
+                            <FormFieldLabel><span style={{ color: TEXT_BASE }} >Enter Collections</span></FormFieldLabel>
+                            <TagInput
+                                values={currGameData.collections}
+                                autocompleteItems={AUTOCOMPLETE_COLLECTIONS}
+                                onChange={(values: string[]) => setCollections(values)}
+                            />
+                        </div>
+                    </div>
+                }
+            </div>
         </Dialog>
     );
 }
