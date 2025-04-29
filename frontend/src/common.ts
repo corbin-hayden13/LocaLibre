@@ -21,6 +21,7 @@ export interface GameData {
     tags?: string[];          // NSFW, SFW, 3D, 2D, and other game identifiers (see itch.io for game tag examples)
     collections?: string[];   // Favorites, custom collections
 }
+export type GameDataProp = keyof GameData;
 
 export const TEST_GAMES: GameData[] = [
     {
