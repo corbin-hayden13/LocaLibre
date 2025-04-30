@@ -1,5 +1,6 @@
 import { TextInput, Button } from "evergreen-ui";
 import React, { useRef, useState, useEffect } from "react";
+import findGameFiles from "../api/find-game-files";
 
 interface PropsWrapper {
     setFolderPathCallback?: (folderPath: string) => void;
@@ -7,16 +8,18 @@ interface PropsWrapper {
 
 export default function FolderPicker({setFolderPathCallback}: PropsWrapper) {
     const [folderPath, setFolderPath] = useState<string>("");
-    const inputRef = useRef<HTMLElement | null>(null);
+    // const inputRef = useRef<HTMLElement | null>(null);
 
     useEffect(() => { if (setFolderPathCallback) setFolderPathCallback(folderPath) }, [folderPath]);
 
-    const handleFolderClick = () => {
-        inputRef.current?.click();
-    };
+    // const handleFolderClick = () => {
+    //     inputRef.current?.click();
+    // };
 
-    const handleFolderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFolderPath("Under Development");
+    const handleFolderClick = async () => {
+        const gamePath: string = await findGameFiles();
+        console.log(`Found the game path: \"${gamePath}\"`);
+        setFolderPath(gamePath);
     };
     
     return (
@@ -33,7 +36,7 @@ export default function FolderPicker({setFolderPathCallback}: PropsWrapper) {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFolderPath(e.target.value)}
             />
             <Button onClick={handleFolderClick} >Choose Folder</Button>
-            <input
+            {/* <input
                 type="file"
                 multiple
                 ref={(elem) => {
@@ -45,7 +48,7 @@ export default function FolderPicker({setFolderPathCallback}: PropsWrapper) {
                 }}
                 style={{ display: "none" }}
                 onChange={handleFolderSelect}
-            />
+            /> */}
         </div>
     );
 }
