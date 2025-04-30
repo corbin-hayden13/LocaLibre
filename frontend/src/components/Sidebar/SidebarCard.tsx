@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { GameData, SetState, XYPos } from "../../common";
-import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../../common-themes";
+import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD, TEXT_SELECTED } from "../../common-themes";
 import GameQuickOptionsMenu from "../GameQuickOptionsMenu";
 
 interface GameLabelProps {
@@ -51,6 +51,7 @@ export function SidebarCard({ cardTitle, listGameData }: PropsWrapper) {
                 flexDirection: "column",
                 background: ELEM_BACKGROUND,
                 borderRadius: 10,
+                border: `1px solid ${TEXT_SELECTED}`,
                 maxWidth: "100%", // Stop text from expanding the card too far
             }}
         >

@@ -1,7 +1,8 @@
-import { Button, ChevronDownIcon, ChevronRightIcon, Dialog, FormFieldLabel, Label, TagInput, TextInputField } from "evergreen-ui";
+import { Button, ChevronDownIcon, Dialog, FormFieldLabel, TagInput, TextInputField } from "evergreen-ui";
 import { ChangeEvent, useState, useEffect } from "react";
 import { GameData, GameDataProp, SetState } from "../common";
 import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../common-themes";
+import FolderPicker from "./FolderPicker";
 
 const DISPLAY_NAME: GameDataProp = "displayName";
 const GAME_PATH: GameDataProp = "gamePath";
@@ -12,7 +13,7 @@ const DESCRIPTION: GameDataProp = "description";
 // const TAGS: GameDataProp = "tags";
 // const COLLECTIONS: GameDataProp = "collections";
 const VERSION: GameDataProp = "version";
-const RELEASE_DATE: GameDataProp = "releaseDate";
+// const RELEASE_DATE: GameDataProp = "releaseDate";
 
 const EMPTY_GAME_DATA: GameData = {
     gameUID: "",
@@ -150,11 +151,16 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
                     <div
                         style={{ padding: 10, }}
                     >
-                        <TextInputField
+                        {/* <TextInputField
                             label={<span style={{ color: TEXT_BASE }} >Cover Image Path</span>}
                             value={currGameData[COVER_IMAGE]}
                             placeholder="Enter cover image path"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(COVER_IMAGE, e.target.value, setCurrGameData)}
+                        /> */}
+                        <FolderPicker
+                            setFolderPathCallback={
+                                (folderPath: string) => handleInputChange(COVER_IMAGE, folderPath, setCurrGameData)
+                            }
                         />
                         <div
                             style={{

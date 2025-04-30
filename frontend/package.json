@@ -17,6 +17,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "concurrent-start:mac": "concurrently \"npm run start:mac:frontend\" \"npm run start:mac:backend\"",
+    "start:mac:frontend": "react-scripts start",
+    "start:mac:backend": ". ../backend/venv/bin/activate; python ../backend/main.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -47,6 +50,7 @@
   "devDependencies": {
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
+    "concurrently": "^9.1.2",
     "typescript": "^4.9.5"
   }
 }
