@@ -1,8 +1,9 @@
 import { Button, ChevronDownIcon, Dialog, FormFieldLabel, TagInput, TextInputField } from "evergreen-ui";
 import { ChangeEvent, useState, useEffect } from "react";
-import { GameData, GameDataProp, SetState } from "../common";
-import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../common-themes";
+import { GameData, GameDataProp, SetState } from "../../common";
+import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../../common-themes";
 import FolderPicker from "./FolderPicker";
+import ImageUpload from "./ImageUpload";
 
 const DISPLAY_NAME: GameDataProp = "displayName";
 const GAME_PATH: GameDataProp = "gamePath";
@@ -104,12 +105,14 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
                 placeholder="Enter game name"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(DISPLAY_NAME, e.target.value, setCurrGameData)}
             />
-            <TextInputField
-                label={<span style={{ color: TEXT_BASE }} >Game Path *</span>}
-                value={currGameData[GAME_PATH]}
-                placeholder="Enter game path"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(GAME_PATH, e.target.value, setCurrGameData)}
-            />
+            <div style={{ display: "flex", flexDirection: "column", marginBottom: 20, gap: 10, }} >
+                <FormFieldLabel><span style={{ color: TEXT_BASE }} >Game Folder Path *</span></FormFieldLabel>
+                <FolderPicker
+                    setFolderPathCallback={
+                        (folderPath: string) => handleInputChange(GAME_PATH, folderPath, setCurrGameData)
+                    }
+                />
+            </div>
             <TextInputField
                 label={<span style={{ color: TEXT_BASE }} >Description</span>}
                 value={currGameData[DESCRIPTION]}
@@ -151,33 +154,26 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
                     <div
                         style={{ padding: 10, }}
                     >
-                        {/* <TextInputField
-                            label={<span style={{ color: TEXT_BASE }} >Cover Image Path</span>}
-                            value={currGameData[COVER_IMAGE]}
-                            placeholder="Enter cover image path"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(COVER_IMAGE, e.target.value, setCurrGameData)}
-                        /> */}
-                        <FolderPicker
-                            setFolderPathCallback={
-                                (folderPath: string) => handleInputChange(COVER_IMAGE, folderPath, setCurrGameData)
-                            }
-                        />
+                        <ImageUpload />
                         <div
                             style={{
                                 display: "flex",
                                 justifyContent: "space-between",
+                                gap: 10,
                             }}
                         >
                             <TextInputField
                                 label={<span style={{ color: TEXT_BASE }} >Genre</span>}
                                 value={currGameData[GENRE]}
                                 placeholder="Enter genre"
+                                width="100%"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(GENRE, e.target.value, setCurrGameData)}
                             />
                             <TextInputField
                                 label={<span style={{ color: TEXT_BASE }} >Version</span>}
                                 value={currGameData[VERSION]}
                                 placeholder="Enter game version"
+                                width="100%"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange(VERSION, e.target.value, setCurrGameData)}
                             />
                         </div>

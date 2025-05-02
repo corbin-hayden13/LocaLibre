@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AddIcon, Button, SearchInput } from "evergreen-ui";
 import { ELEM_BACKGROUND, TEXT_BOLD, BUTTON_SECONDARY } from "../common-themes";
-import AddGameModal from "./AddGameModal";
+import AddGameModal from "./AddGame/AddGameModal";
 
 export function WebAppSubheading() {
     const [searchQuery, setSearchQuery] = useState<string>("")
