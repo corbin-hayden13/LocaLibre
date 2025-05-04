@@ -1,6 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
 
+/******************************************************************************
+ * Common Types
+ ******************************************************************************
+ */
+
 export type SetState<T> = Dispatch<SetStateAction<T>>;
+export type GenericDict<T> = {[key: string]: T};
+
+/******************************************************************************
+ * Common Interfaces
+ ******************************************************************************
+ */
 
 export interface XYPos {
     x: number;
@@ -21,6 +32,16 @@ export interface GameData {
     tags?: string[];          // NSFW, SFW, 3D, 2D, and other game identifiers (see itch.io for game tag examples)
     collections?: string[];   // Favorites, custom collections
 }
+export type GameDataProp = keyof GameData;
+
+/******************************************************************************
+ * Common Data
+ ******************************************************************************
+ */
+
+const DEFAULT_SERVER_PORT: string = "8000";
+export const SERVER_PORT: string = process.env.REACT_APP_SERVER_PORT || DEFAULT_SERVER_PORT;
+export const SERVER_URL: string = `http://localhost:${SERVER_PORT}`;
 
 export const TEST_GAMES: GameData[] = [
     {

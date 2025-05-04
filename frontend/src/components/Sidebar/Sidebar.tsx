@@ -12,7 +12,6 @@ export function Sidebar() {
                 gap: 20,
                 maxWidth: "20%",
                 minWidth: "250px",
-                height: "100%",
                 overflowY: "auto",
             }}
         >
