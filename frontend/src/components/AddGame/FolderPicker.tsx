@@ -10,12 +10,11 @@ interface PropsWrapper {
 export default function FolderPicker({ placeholder, setFolderPathCallback }: PropsWrapper) {
     const [folderPath, setFolderPath] = useState<string>("");
 
-    useEffect(() => { if (setFolderPathCallback) setFolderPathCallback(folderPath) }, [folderPath]);
-
     const handleFolderClick = async () => {
         const gamePath: string = await findGameFiles();
         console.log(`Found the game path: \"${gamePath}\"`);
         setFolderPath(gamePath);
+        if (setFolderPathCallback) setFolderPathCallback(folderPath);
     };
     
     return (
@@ -31,7 +30,10 @@ export default function FolderPicker({ placeholder, setFolderPathCallback }: Pro
             <TextInput
                 placeholder={placeholder ? placeholder : "Enter relative path or choose folder"}
                 value={folderPath}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFolderPath(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFolderPath(e.target.value);
+                    if (setFolderPathCallback) setFolderPathCallback(folderPath);
+                }}
                 width={"100%"}
             />
             <Button onClick={handleFolderClick} >Choose Folder</Button>

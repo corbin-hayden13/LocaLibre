@@ -65,7 +65,7 @@ export function SidebarCard({ cardTitle, listGameData }: PropsWrapper) {
                     background: ELEM_HEADING
                 }}
             >
-                <text style={{ color: TEXT_BOLD, fontWeight: "bold", textAlign: "center" }} >{cardTitle}</text>
+                <span style={{ color: TEXT_BOLD, fontWeight: "bold", textAlign: "center" }} >{cardTitle}</span>
             </div>
             <div
                 style={{

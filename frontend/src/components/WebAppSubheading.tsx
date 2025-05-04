@@ -44,7 +44,7 @@ export function WebAppSubheading() {
                 iconAfter={<AddIcon color={TEXT_BOLD} />}
                 background={BUTTON_SECONDARY}
             >
-                <text style={{color: TEXT_BOLD, fontWeight: "bold"}} >Add Game</text>
+                <span style={{color: TEXT_BOLD, fontWeight: "bold"}} >Add Game</span>
             </Button>
             <AddGameModal isShown={addGameModalVisible} onClose={() => setAddGameModalVisible((prevValue) => !prevValue)} />
         </div>

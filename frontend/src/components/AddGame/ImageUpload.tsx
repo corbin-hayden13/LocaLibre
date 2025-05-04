@@ -1,23 +1,19 @@
 import { useState, useRef } from "react";
-import { FileUploader, Image, FormFieldLabel, } from "evergreen-ui";
+import { FormFieldLabel, Button } from "evergreen-ui";
 import { TEXT_BASE, } from "../../common-themes";
 
 export default function ImageUpload() {
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const iconInputRef = useRef<HTMLInputElement>(null);
+    const bannerInputRef = useRef<HTMLInputElement>(null);
 
-    const handleUpload = (files: File[]) => {
-        const file: File = files[0];
+    const [iconImgFile, setIconImgFile] = useState<File | null>(null);
+    const [bannerImgFile, setBannerImgFile] = useState<File | null>(null);
 
-        if (file && file.type.startsWith("image/")) {
-            const reader: FileReader = new FileReader();
-
-            reader.onloadend = () => setImageSrc(reader.result as string);
-
-            reader.readAsDataURL(file);
-        }
-        else {
-            setImageSrc(null);
-        }
+    const handleUpload = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        setFile: (file: File | null) => void
+    ) => {
+        setFile(e.target.files?.[0] || null);
     };
 
     return (
@@ -26,28 +22,65 @@ export default function ImageUpload() {
                 display: "flex",
                 flexDirection: "row",
                 gap: 10,
+                marginBottom: 20,
             }}
         >
-            <FileUploader
-                label={<span style={{ color: TEXT_BASE }} >Game Banner Upload</span>}
-                maxFiles={1}
-                maxSizeInBytes={50 * 1024 * 1024}
-                onChange={handleUpload}
-                accept="image/*"
-            />
-            <FileUploader
-                label={<span style={{ color: TEXT_BASE }} >Game Icon Upload</span>}
-                maxFiles={1}
-                maxSizeInBytes={50 * 1024 * 1024}
-                onChange={handleUpload}
-                accept="image/*"
-            />
-            {imageSrc && (
-                <div>
-                    <FormFieldLabel><span style={{ color: TEXT_BASE }} >Image Preview:</span></FormFieldLabel>
-                    <Image src={imageSrc} alt="Game Image Preview" maxWidth="100%" />
-                </div>
-            )}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                    gap: 10,
+                }}
+            >
+                <FormFieldLabel><span style={{ color: TEXT_BASE }} >Game Icon</span></FormFieldLabel>
+                <Button
+                    style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        width: "100%",
+                    }}
+                    onClick={() => iconInputRef.current?.click()}
+                >
+                    {iconImgFile ? iconImgFile.name : "Upload Game Icon"}
+                </Button>
+                <input
+                    ref={iconInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleUpload(e, setIconImgFile)}
+                    style={{ display: "none" }}
+                />
+            </div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                    gap: 10,
+                }}
+            >
+                <FormFieldLabel><span style={{ color: TEXT_BASE }} >Game Banner</span></FormFieldLabel>
+                <Button
+                    style={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        width: "100%",
+                    }}
+                    onClick={() => bannerInputRef.current?.click()}
+                >
+                    {bannerImgFile ? bannerImgFile.name : "Upload Game Banner"}
+                </Button>
+                <input
+                    ref={bannerInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleUpload(e, setBannerImgFile)}
+                    style={{ display: "none" }}
+                />
+            </div>
         </div>
     );
 }
