@@ -19,7 +19,7 @@
     "start": "react-scripts start",
     "concurrent-start:mac": "concurrently \"npm run start:mac:frontend\" \"npm run start:mac:backend\"",
     "start:mac:frontend": "react-scripts start",
-    "start:mac:backend": ". ../backend/venv/bin/activate; python ../backend/main.py",
+    "start:mac:backend": ". ../backend/venv/bin/activate; python ../backend/server.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
