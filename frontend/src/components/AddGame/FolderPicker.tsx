@@ -1,6 +1,6 @@
 import { TextInput, Button } from "evergreen-ui";
-import React, { useState, useEffect } from "react";
-import findGameFiles from "../../api/find-game-files";
+import React, { useState, } from "react";
+import { findGameFiles } from "../../api";
 
 interface PropsWrapper {
     placeholder?: string;

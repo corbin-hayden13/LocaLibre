@@ -11,6 +11,7 @@
 # production
 /frontend/build
 /backend/venv
+/backend/__pycache__
 
 # misc
 /frontend/.DS_Store

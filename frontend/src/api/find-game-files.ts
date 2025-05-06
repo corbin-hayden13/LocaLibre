@@ -1,4 +1,4 @@
-import { API_URLS } from "./endpoints";
+import { API_URLS, } from "./endpoints";
 
 interface ResponseSchema {
     status: string;

@@ -2,12 +2,12 @@ import { Button, ChevronDownIcon, Dialog, FormFieldLabel, TagInput, TextInputFie
 import { ChangeEvent, useState, useEffect } from "react";
 import { GameData, GameDataProp, SetState } from "../../common";
 import { ELEM_BACKGROUND, ELEM_HEADING, TEXT_BASE, TEXT_BOLD } from "../../common-themes";
+import { addGame } from "../../api";
 import FolderPicker from "./FolderPicker";
 import ImageUpload from "./ImageUpload";
 
 const DISPLAY_NAME: GameDataProp = "displayName";
 const GAME_PATH: GameDataProp = "gamePath";
-const COVER_IMAGE: GameDataProp = "coverImagePath";
 const GENRE: GameDataProp = "genre";
 const DEVELOPER: GameDataProp = "developer";
 const DESCRIPTION: GameDataProp = "description";
@@ -35,7 +35,6 @@ const AUTOCOMPLETE_COLLECTIONS: string[] = ["Favorites", "All Games", "Hidden"];
 
 const handleInputChange = (gameDataProp: GameDataProp, value: string, setCurrGameData: SetState<GameData>) => {
     setCurrGameData((prevData) => ({ ...prevData, [gameDataProp]: value }));
-    console.log(`Changing ${gameDataProp} to ${value}`);
 };
 
 interface PropsWrapper {
@@ -60,6 +59,19 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
     const handleOnCloseComplete = () => {
         if (onClose) onClose();
         setCurrGameData(EMPTY_GAME_DATA);
+    };
+
+    const handleAddGame = async (close: () => void) => {
+        const newGameData: GameData | null = await addGame(currGameData);
+        if (newGameData) {
+            setCurrGameData(newGameData);
+            console.log(`Add game success:\n${JSON.stringify(newGameData)}`);
+        }
+        else {
+            console.error("Add game fail: newGameData is null");
+        }
+
+        close();
     };
 
     return (
@@ -89,10 +101,7 @@ export default function AddGameModal({isShown, onClose}: PropsWrapper) {
                         style={{
                             background: TEXT_BOLD
                         }}
-                        onClick={() => {
-                            // TODO - Add game logic
-                            close();
-                        }}
+                        onClick={() => handleAddGame(close)}
                     >
                         Add Game
                     </Button>

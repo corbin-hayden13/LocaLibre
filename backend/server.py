@@ -1,18 +1,36 @@
 import subprocess
-import uuid
-import base64
 import os
 
-from flask import Flask, jsonify, request
+from flask import g, Flask, jsonify, request
 from flask_cors import CORS
 from pydantic import ValidationError
 
 from common import GameData, generate_game_uuid
-from database import connect_to_db, add_game_db, setup_database
+from database import (
+    Connection, Row,
+    connect_to_db, add_game_db, setup_database,
+    get_game_by_uuid_db
+)
 
 
 app = Flask(__name__)
 CORS(app, origins="*")
+
+
+def get_db_conn() -> tuple[Connection | None, str]:
+    db_conn: Connection | None
+    error_msg: str
+
+    if "db" not in g:
+        db_conn, error_msg = connect_to_db()
+
+        if not db_conn:
+            return None, error_msg
+        
+        g.db = db_conn
+        g.db.row_factory = Row
+
+    return g.db, ""
 
 
 @app.route("/api/debug", methods=["GET"])
@@ -34,7 +52,7 @@ def add_game_to_database():
 
         # Save to database
         error_msg: str
-        db_conn, error_msg = connect_to_db()
+        db_conn, error_msg = get_db_conn()
 
         if not db_conn:
             return jsonify({"staus": "add game error", "errors": error_msg}), 400
@@ -44,13 +62,34 @@ def add_game_to_database():
 
         # Return status of add to database
         if add_game_success:
-            return jsonify({"status": "success", "gameUID": game_data.gameUID}), 200
+            return jsonify({"status": "success", "gameData": game_data.model_dump()}), 200
 
         else:
             return jsonify({"staus": "add game error", "errors": error_msg}), 400
 
     except ValidationError as e:
         return jsonify({"staus": "add game error", "errors": e.errors()}), 400
+    
+
+@app.route("/test/get-game-by-uuid", methods=["GET"])
+def test_get_game_by_uuid():
+    db_conn: Connection
+    game_data: GameData | None
+    error_msg: str
+
+    db_conn, error_msg = get_db_conn()
+
+    if not db_conn:
+        return jsonify({"staus": "get game error", "errors": error_msg}), 400
+
+    game_uuid: str = request.args.get("gameUID", "")
+    game_data, error_msg = get_game_by_uuid_db(g.db, game_uuid)
+
+    if not game_data:
+        return jsonify({"staus": "get game error", "errors": error_msg}), 400
+    
+    else:
+        return jsonify({"status": "success", "gameData": game_data.model_dump()}), 200
     
 
 @app.route("/api/find-game-files", methods=["GET"])
@@ -75,10 +114,22 @@ def pick_game_folder():
         return jsonify({ "status": "success", "folderPath": folder_path })
     else:
         return jsonify({ "status": "failure", "errorMessage": stderr.decode("utf-8") }), 400
+    
+
+@app.teardown_appcontext
+def on_app_close(exception):
+    # Close the database connection
+    db: Connection | None = g.pop("db", None)
+    if db is not None:
+        db.close()
 
 
 if __name__ == "__main__":
-    setup_database()
+    db_conn: Connection
+    error_msg: str
 
     port: int = int(os.environ.get("REACT_APP_SERVER_PORT", 8000))
     app.run(debug=True, port=port)
+
+    db_conn, error_msg = get_db_conn()
+    setup_database(db_conn)
